@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quarantine Facility Management MVP</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .hidden { display: none; }
+        button { margin: 5px; padding: 8px 12px; }
+        input { margin: 5px; padding: 5px; }
+        .card { border: 1px solid #ccc; padding: 15px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+<h2>Quarantine Facility Management System (MVP)</h2>
+
+<div id="login">
+    <h3>Select Role</h3>
+    <button onclick="login('nurse')">Nurse</button>
+    <button onclick="login('doctor')">Doctor</button>
+    <button onclick="login('admin')">Admin</button>
+</div>
+
+<div id="nurse" class="hidden">
+    <h3>Nurse Dashboard</h3>
+    <div class="card">
+        <p>Patient: John Doe</p>
+        <input type="number" id="tempInput" placeholder="Enter Temperature">
+        <button onclick="recordTemp()">Record Temperature</button>
+        <p id="tempStatus"></p>
+    </div>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div id="doctor" class="hidden">
+    <h3>Doctor Dashboard</h3>
+    <div class="card">
+        <p>Patient: John Doe</p>
+        <p id="tempDisplay">Temperature: Not Recorded</p>
+        <button onclick="markVisit()">Mark Visit Complete</button>
+        <button onclick="checkDischarge()">Check Discharge Eligibility</button>
+        <p id="doctorStatus"></p>
+    </div>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div id="admin" class="hidden">
+    <h3>Admin Dashboard</h3>
+    <div class="card">
+        <p>Current Occupancy: <span id="occupancy">1</span> / 74</p>
+        <button onclick="discharge()">Discharge Patient</button>
+        <p id="adminStatus"></p>
+    </div>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+let temperature = null;
+let visitDone = false;
+
+function login(role) {
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById(role).classList.remove("hidden");
+}
+
+function logout() {
+    location.reload();
+}
+
+function recordTemp() {
+    let temp = document.getElementById("tempInput").value;
+    if (temp == "") {
+        document.getElementById("tempStatus").innerText = "Please enter temperature.";
+        return;
+    }
+    temperature = temp;
+    document.getElementById("tempStatus").innerText = "Temperature recorded successfully.";
+    document.getElementById("tempDisplay").innerText = "Temperature: " + temp;
+}
+
+function markVisit() {
+    if (!temperature) {
+        document.getElementById("doctorStatus").innerText = "Temperature not recorded yet!";
+        return;
+    }
+    visitDone = true;
+    document.getElementById("doctorStatus").innerText = "Visit marked complete.";
+}
+
+function checkDischarge() {
+    if (temperature && temperature < 99) {
+        document.getElementById("doctorStatus").innerText = "Eligible for discharge (simulated 3-day rule).";
+    } else {
+        document.getElementById("doctorStatus").innerText = "Not eligible for discharge.";
+    }
+}
+
+function discharge() {
+    if (visitDone) {
+        document.getElementById("occupancy").innerText = "0";
+        document.getElementById("adminStatus").innerText = "Patient discharged successfully.";
+    } else {
+        document.getElementById("adminStatus").innerText = "Doctor visit not completed yet.";
+    }
+}
+</script>
+
+</body>
+</html>
