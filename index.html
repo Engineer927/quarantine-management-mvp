@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quarantine Facility Management - MVP Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+        }
+        .container {
+            padding: 30px;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .kpi {
+            background: rgba(255,255,255,0.08);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .kpi h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .kpi p {
+            margin: 5px 0 0;
+            opacity: 0.8;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        .card {
+            background: rgba(255,255,255,0.08);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        button {
+            background: #00c6ff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            color: black;
+            font-weight: bold;
+            width: 100%;
+        }
+        input {
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            margin-top: 10px;
+            width: 100%;
+        }
+        canvas {
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Quarantine Facility Dashboard</h1>
+    <p>Operational Overview & Performance Monitoring</p>
+
+    <div class="kpi-container">
+        <div class="kpi">
+            <h2 id="occupancy">74</h2>
+            <p>Current Occupancy</p>
+        </div>
+        <div class="kpi">
+            <h2>85%</h2>
+            <p>Cure Rate</p>
+        </div>
+        <div class="kpi">
+            <h2>15%</h2>
+            <p>Mortality Benchmark</p>
+        </div>
+        <div class="kpi">
+            <h2>96%</h2>
+            <p>Daily Compliance</p>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Temperature Trend (Last 7 Days)</h3>
+            <canvas id="tempChart"></canvas>
+        </div>
+
+        <div class="card">
+            <h3>Quick Actions (Nurse/Doctor/Admin)</h3>
+            <input type="number" id="tempInput" placeholder="Enter Temperature">
+            <button onclick="recordTemp()">Record Temperature</button>
+            <button onclick="markVisit()">Mark Doctor Visit</button>
+            <button onclick="discharge()">Discharge Patient</button>
+            <p id="status"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+let temperatureRecorded = false;
+let visitDone = false;
+
+function recordTemp() {
+    let temp = document.getElementById("tempInput").value;
+    if (!temp) {
+        document.getElementById("status").innerText = "Please enter temperature.";
+        return;
+    }
+    temperatureRecorded = true;
+    document.getElementById("status").innerText = "Temperature recorded successfully.";
+}
+
+function markVisit() {
+    if (!temperatureRecorded) {
+        document.getElementById("status").innerText = "Temperature not recorded yet!";
+        return;
+    }
+    visitDone = true;
+    document.getElementById("status").innerText = "Doctor visit marked complete.";
+}
+
+function discharge() {
+    if (!visitDone) {
+        document.getElementById("status").innerText = "Doctor visit not completed yet.";
+        return;
+    }
+    document.getElementById("occupancy").innerText = "73";
+    document.getElementById("status").innerText = "Patient discharged successfully.";
+}
+
+const ctx = document.getElementById('tempChart');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+            label: 'Avg Temperature',
+            data: [101, 100, 99, 98.5, 98.6, 98.4, 98.2],
+            borderColor: '#00c6ff',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: true }
+        }
+    }
+});
+</script>
+</body>
+</html>
